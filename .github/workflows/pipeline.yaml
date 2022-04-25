@@ -87,5 +87,5 @@ jobs:
         working-directory: ./demo-app
       - run: npm run build
         working-directory: ./demo-app
-      - run: aws s3 cp build s3://<bucket_navn>> --recursive --region eu-north-1
+      - run: aws s3 cp build s3://<bucket_navn>> --recursive --region eu-west-1
         working-directory: ./demo-app 

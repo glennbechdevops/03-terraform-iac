@@ -80,17 +80,29 @@ I din fork av dette repositoriet, velg "actions" for å slå på støtte for Git
 Gå til demo-app katalogen 
 
 ```python
+cd 03-terraform-iac
 cd demo-app
+npm install
 npm run start 
 ```
 
-## Oppgave 1 - tilpass  terraformkode
+Du kan sjekke at applikasjonen kjlører ved å trykke "Preview running applicaiton" i Cloud 9 miljøet idtt 
+
+![Alt text](img/preview.png "3")
+
+
+## Oppgave 1 - Pipeline & Terraform
+
+Vi skal nå få denne webapplikasjonen til å kjøre i AWS miljøet vårt, og vi skal lage den nødvendige infrastrukturen - som riktig nok ikke er så veldig mye, med Terraform. 
+
+Noen ting å tenke på 
 
 * En Terraform "backend" en lagringsplass for Terraform metadata som beskriver hvordan infrakode og den faktiske infrastrukturen henger sammen. Man kan si at Terraform state holder orden på rlasjon mellom faktisk infrastruktur 
 og infra-kode 
 * Siden hver enkelt student har sin egen infrastruktur og egen pipeline, må dere også ha deres egne, separate state fil. 
 I provider.tf har vi en Backend for Terraform sin state basert på S3. Du må her erstatte ````<studentnavn>```` med ditt eget brukernavn
 * Følgende konfigurasjon forteller terraform at Backend er på Amazon AWS S3, i hvilken bucket, og hvilken statefil som skal brukes.
+
 ```hcl
   backend "s3" {
     bucket = "pgr301-2021-terraform-state"
@@ -99,8 +111,8 @@ I provider.tf har vi en Backend for Terraform sin state basert på S3. Du må he
   }
 ```
 
-Må må nå fjerne hardkodingen av "glenn" i static_website.tf filen. Det er ikke god praksis å hardkode
-verdier ("glenn...") på denne måten. - 
+Vi skal nå gjøre Terraformkoden bedre, ved å fjerne hardkodingen av "glenn" i static_website.tf filen. Det er ikke god praksis å hardkode
+verdier ("glenn...") på denne måten. 
 
 Lag en variables.tf i rotkatalogen. Velg dit eget bucketnavn for ```<the bucket name>```. Dette må være globalt unikt.
 
@@ -145,11 +157,22 @@ Og istedet for
 
 ## Test koden fra Cloud 9
 
+
 Du er nå klar for å teste infrastrukturkoden fra Cloud9 miøjøet ditt 
 ```sh
+export AWS_REGION=eu-west-1
+terraform init 
 terraform plan
 terraform apply
 ```
+
+## Lag nødvendige hemmeligheter
+
+Følg instruksjonene fra forrige lab https://github.com/glennbechdevops/02-CD-AWS-lamda-sls#hemmeligheter
+for å legge inn hemmelige verdier i ditt GitHub Repo for 
+
+* AWS_ACCESS_KEY_ID
+* AWS_SECRET_ACCESS_KEY
 
 ## Oppgave 2 - endre pipelinekode
 
@@ -161,10 +184,9 @@ terraform apply
   working-directory: ./demo-app 
 ```
 
-
 * Du skal erstatte bucket navnet ```<bucket_name>``` med ditt eget bucketnavn som du valgte i variables.tf
 
-### En glennomgang av Pipeline.yaml
+### Se over glennomgang av Pipeline.yaml
 
 Vi sette hemmeligheter på denne måten slik at terraform har tilgang til AWS nøkler, og har de rettighetene som er nødvendig. 
 
@@ -225,7 +247,7 @@ spør om lov før den kjører.
         run: terraform apply -auto-approve
 ```
 
-Student webapp trenger infrastrukturen laget av terraform. Vi kan da bruke ```needs``` for å lage en avhengighet mellom en eller flere jobber; 
+Student webapp trenger infra laget av terraform. Vi kan da bruke ```needs``` for å lage en avhengighet mellom en eller flere jobber; 
 
 ```yaml
 student_webapp:
@@ -241,12 +263,9 @@ student_webapp:
 * npm build, som bygger et sett med statiske websider av applikasjonen 
 * kopiering av disse filene til en S3 bucket 
 
-For en grundig gjennomgang av hva som skjer i kulissene her; sjekk gjerne ut denne; https://medium.com/@p_stotz/static-website-hosting-leverage-aws-s3-with-cloudfront-route53-acm-and-lambda-edge-8c781bc3b390
-Fordelen med Terraformmoduler er at vi kan komme raskt i gang uten nødvemdigvis å kunne alle detaljene. 
-
 # Test løsningen i nettleser
 
-* Gratulerer! Du har nå publisert din egent React.js web app på AWS. I nettleser kan du nå skrive http://<bucket_name> 
+* Gratulerer! Du har nå publisert din egent React.js web app på AWS.  
 * Prøv å endre på Javascript filene, følg med på pipeline i "actions" i GitHub, og se at endringene kommer ut. 
 
 # Ekstra 
