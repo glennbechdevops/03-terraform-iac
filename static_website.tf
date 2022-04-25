@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "frontend" {
-  bucket = var.bucket_name
+  bucket =  "glenn-demobucket"
   acl = "public-read"
   policy = <<EOF
 {
@@ -22,4 +22,9 @@ EOF
     index_document = "index.html"
     error_document = "index.html"
   }
+}
+
+variable "bucket_name" {
+  description = "The name of the bucket to create"
+  default = "glenn-demobucket"
 }

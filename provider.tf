@@ -7,8 +7,8 @@ terraform {
   }
   backend "s3" {
     bucket = "pgr301-2021-terraform-state"
-    key    = "newman/terraform-in-pipeline.state"
-    region = "eu-north-1"
+    key    = "<studentnavn>/terraform-in-pipeline.state"
+    region = "eu-west-1"
   }
 }
 

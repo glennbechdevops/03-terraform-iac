@@ -1,9 +1,9 @@
 # Webapp og infrastruktur med React, Terraform og Open Source moduler
 
-I denne oppgaven vil du jobbe med  Terraformkode som lager en Amazon AWS Bucket som skal brukes til å lagre statiske websider
-laget i react. React appen ligger i "demo app" mappen i dette repoet. 
+I denne oppgaven vil du lage en nettside ved hjelp av Amazon S3. S3 Buvket skal lages med Terraformkode, og statiske websider skal 
+lages fra kildekode med NPM av Github actions og lastes opp. Appen er en enkel "hello world" skrevet i React. 
 
-Øvingen
+Vi skal se nærmer på; 
 
 * Mer avansert Github actions. For eksempel; Flere jobber og avhengigheter mellom jobber
 * Mer avansert Github actions - Bruke funksjonen ```github.issues.createComment``` for å legge på kommentarer på Pull requests 
@@ -84,14 +84,13 @@ cd demo-app
 npm run start 
 ```
 
-## Oppgave 1 - Fjern hard-kodinger i terraformkode
+## Oppgave 1 - tilpass  terraformkode
 
-En Terraform backend en lagringsplass for Terraform sin state.Terraform state holder orden på rlasjon mellom faktisk infrastruktur 
-og infra-kode.  
-
-Siden hver enkelt student har sin egen infrastruktur og egen pipeline, må dere også ha deres egne, separate state fil. 
+* En Terraform "backend" en lagringsplass for Terraform metadata som beskriver hvordan infrakode og den faktiske infrastrukturen henger sammen. Man kan si at Terraform state holder orden på rlasjon mellom faktisk infrastruktur 
+og infra-kode 
+* Siden hver enkelt student har sin egen infrastruktur og egen pipeline, må dere også ha deres egne, separate state fil. 
 I provider.tf har vi en Backend for Terraform sin state basert på S3. Du må her erstatte ````<studentnavn>```` med ditt eget brukernavn
-
+* Følgende konfigurasjon forteller terraform at Backend er på Amazon AWS S3, i hvilken bucket, og hvilken statefil som skal brukes.
 ```hcl
   backend "s3" {
     bucket = "pgr301-2021-terraform-state"
@@ -100,27 +99,74 @@ I provider.tf har vi en Backend for Terraform sin state basert på S3. Du må he
   }
 ```
 
-Denne konfigurasjonen forteller terraform at Backend er på Amazon AWS S3, i hvilken bucket, og hvilken statefil som skal brukes. 
+Må må nå fjerne hardkodingen av "glenn" i static_website.tf filen. Det er ikke god praksis å hardkode
+verdier ("glenn...") på denne måten. - 
 
-Lag en variables.tf i rotkatalogen, og fjern hardkodingen av "glenn" i static_website.tf filen. Det er ikke god praksis å hardkode
-verdier ("glenn") på denne måten. - https://www.terraform.io/docs/language/values/variables.html
+Lag en variables.tf i rotkatalogen. Velg dit eget bucketnavn for ```<the bucket name>```. Dette må være globalt unikt.
 
-Legg også spesielt merke til hvordan vi referer til modulernår de finnes i Terraform registry (https://registry.terraform.io/)
+```hcl
+variable "bucket_name" {
+  description = "The name of the bucket to create"
+  default = "<the bucket name>"
+}
+```
+For mer informasjon om varialer se her; https://www.terraform.io/docs/language/values/variables.html
 
+Da kan vi Istedet for å skrive
+```hcl
+
+resource "aws_s3_bucket" "frontend" {
+  bucket =  "glenn-demobucket"
+  acl = "public-read"
+```
+
+Da kan vi også bruke følgende syntaks
+
+```hcl
+resource "aws_s3_bucket" "frontend" {
+  bucket = var.bucket_name
+  acl = "public-read"
+```
+Og istedet for
+
+```hcl     
+     "Effect": "Allow",
+      "Resource": "arn:aws:s3:::glenn/*",
+      "Principal": "*"
+    }
+```
+.. Så kan vi da skrive 
+
+```hcl
+   "Effect": "Allow",
+   "Resource": "arn:aws:s3:::${var.bucket_name}/*",
+   "Principal": "*"
+```
+
+## Test koden fra Cloud 9
+
+Du er nå klar for å teste infrastrukturkoden fra Cloud9 miøjøet ditt 
+```sh
+terraform plan
+terraform apply
+```
 
 ## Oppgave 2 - endre pipelinekode
 
-Modifiser filen ```.github/workflows/pipeline.yaml``` og tilpass denne ditt eget miljø.
-* Du må endre på denne delen og erstatte bucket navnet; ```<bucket_name>``` med ditt eget bucketnavn som du valgte i variables.tf
+* Modifiser filen ```.github/workflows/pipeline.yaml``` og tilpass denne ditt eget miljø.
+* Du må endre på denne delen av filen,
 
 ```yaml
 - run: aws s3 cp build s3://<bucket_navn>> --recursive --region eu-west-1
   working-directory: ./demo-app 
 ```
 
-### Gjennomgang av Pipeline.yaml
 
-Vi sette miljøvariabler på denne måten slik at terraform har tilgang til AWS nøkler, og har de rettighetene som er nødvendig. 
+* Du skal erstatte bucket navnet ```<bucket_name>``` med ditt eget bucketnavn som du valgte i variables.tf
+
+### En glennomgang av Pipeline.yaml
+
+Vi sette hemmeligheter på denne måten slik at terraform har tilgang til AWS nøkler, og har de rettighetene som er nødvendig. 
 
 ```yaml
     env:
@@ -129,9 +175,8 @@ Vi sette miljøvariabler på denne måten slik at terraform har tilgang til AWS 
       AWS_REGION: eu-west-1
 ```
 
-Her ser vi et steg i en pipeline med en "if" - som bare skjer dersom det er en pull request som bygges, vi ser også at 
-pipeline får lov til å fortsette dersom dette steget feiler. 
-
+Her ser vi et steg i en pipeline med en ```if``` - som bare skjer dersom det er en ```pull request``` som bygges, vi ser også at 
+pipeline får lov til å fortsette dersom dette steget feiler.
 ```
       - name: Terraform Plan
         id: plan
@@ -140,8 +185,7 @@ pipeline får lov til å fortsette dersom dette steget feiler.
         continue-on-error: true
 ```
 
-Her setter vi en miljøvariabel lik teksten som et tidligere steg skrev til stdout når det kjørte. Som vi ser kan vi referere til all output 
-laget av et tidligere steg (!)
+* Her setter vi en variabel lik _all output fra et tidligere steg (!)_  
 
 ```yaml
        env:
@@ -163,6 +207,7 @@ Her bruker vi også den innebyggede funksjonen  ```github.issues.createComment``
     \`\`\`
     </details>
     *Pusher: @${{ github.actor }}, Action: \`${{ github.event_name }}\`*`;
+    
     github.issues.createComment({
       issue_number: context.issue.number,
       owner: context.repo.owner,
@@ -171,15 +216,16 @@ Her bruker vi også den innebyggede funksjonen  ```github.issues.createComment``
     })
 ```
 
-Når noen gjør en Git push til main branch, kjører vi bare ```terraform apply``` 
+Når noen gjør en Git push til main branch, kjører vi ```terraform apply``` med ett flag ```--auto-approve``` som gjør at terraform ikke 
+spør om lov før den kjører.
 
 ```yaml
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approves
+        run: terraform apply -auto-approve
 ```
 
-Student webapp trenger infrastrukturen laget av terraform. Vi kan da bruke "needs" for å lage en avhengighet mellom en eller flere jobber; 
+Student webapp trenger infrastrukturen laget av terraform. Vi kan da bruke ```needs``` for å lage en avhengighet mellom en eller flere jobber; 
 
 ```yaml
 student_webapp:
@@ -190,7 +236,7 @@ student_webapp:
     needs: terraform
 ```
 
-Å publisere en statisk website, og hoste denne på AWS S3 gjøres i to steg; 
+Å publisere en statisk website, og hoste denne på AWS S3 gjøres nå i to steg; 
 
 * npm build, som bygger et sett med statiske websider av applikasjonen 
 * kopiering av disse filene til en S3 bucket 
