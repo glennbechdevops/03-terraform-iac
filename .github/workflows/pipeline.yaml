@@ -13,7 +13,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_REGION: eu-north-1
+      AWS_REGION: eu-west-1
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -87,5 +87,5 @@ jobs:
         working-directory: ./demo-app
       - run: npm run build
         working-directory: ./demo-app
-      - run: aws s3 cp build s3://<bucket_navn>> --recursive --region eu-west-1
+      - run: aws s3 cp build s3://<bucket_navn> --recursive --region eu-west-1
         working-directory: ./demo-app 

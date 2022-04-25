@@ -5,6 +5,7 @@ lages fra kildekode med NPM av Github actions og lastes opp. Appen er en enkel "
 
 Vi skal se nærmer på; 
 
+* En workflow med to jobber - en jobb vil lage infrastruktur, den andre kompilere og publisere en webapp
 * Mer avansert Github actions. For eksempel; Flere jobber og avhengigheter mellom jobber
 * Mer avansert Github actions - Bruke funksjonen ```github.issues.createComment``` for å legge på kommentarer på Pull requests 
 * Terraform i Pipeline - GitHub actions skal kjøre Terraform. 
@@ -185,6 +186,26 @@ for å legge inn hemmelige verdier i ditt GitHub Repo for
 ```
 
 * Du skal erstatte bucket navnet ```<bucket_name>``` med ditt eget bucketnavn som du valgte i variables.tf
+
+### Sjekk in kode og push 
+
+Det kan være lurt på formatere terraformkode før du sjekker inn. Pipeline feiler på feil formatert kode. 
+```
+terraform fmt --recursive
+```
+
+Commit filer og push 
+
+```sh
+git add  .github/workflows/pipeline.yaml
+git add  provider.tf
+git add  static_website.tf
+git add variables.tf 
+git commit -m"run forest run"
+git push
+```
+
+Du skal bruke Token du lage i noen steg tidligere når du blir bedt om passord
 
 ### Se over glennomgang av Pipeline.yaml
 
