@@ -1,0 +1,186 @@
+/*--------------------------------------------------------------------- File Name: responsive.css ---------------------------------------------------------------------*/
+
+
+/*------------------------------------------------------------------- 991px x 768px ---------------------------------------------------------------------*/
+
+@media (min-width: 1200px) and (max-width: 1500px) {}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+    .text-bg h1 {
+        font-size: 72px;
+    }
+    .text-bg span {
+        font-size: 40px;
+    }
+    .titlepage h2 {
+        font-size: 39px;
+    }
+    .cont h3 {
+        font-size: 31px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+    .navigation.navbar-dark .navbar-nav .nav-link {
+        padding: 0 20px;
+    }
+    .text-bg h1 {
+        padding-top: 0px;
+        font-size: 44px;
+        line-height: 61px;
+        padding-bottom: 18px;
+    }
+    .text-bg span {
+        font-size: 28px;
+        line-height: 30px;
+    }
+    .text-bg a {
+        margin-right: 5px;
+        padding: 10px 23px;
+        float: inherit;
+        max-width: 156px;
+    }
+    .main_form {
+        padding: 55px 25px;
+    }
+    .cont span {
+        font-size: 22px;
+        line-height: 22px;
+    }
+    .cont p {
+        padding: 0px 30px;
+        padding-bottom: 60px;
+    }
+    .cont {
+        margin-top: 90px;
+    }
+}
+
+@media (min-width: 576px) and (max-width: 767px) {
+    .mean-container .mean-bar {
+        margin-top: 0px;
+    }
+    .text-bg a {
+        float: inherit;
+        margin-bottom: 30px;
+    }
+    .titlepage h2 {
+        font-size: 36px;
+    }
+    .about .titlepage {
+        padding-top: 30px;
+    }
+    .about a {
+        margin-bottom: 40px;
+    }
+    .cont p {
+        padding: 0px 30px;
+        padding-bottom: 60px;
+    }
+    .padd_leri0 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    .cont span {
+        font-size: 20px;
+        line-height: 24px;
+    }
+    .navigation.navbar {
+        float: right;
+        display: inherit !important;
+        padding: 0;
+        width: 100%;
+    }
+    .navigation .navbar-collapse {
+        background: #fff;
+        padding: 20px;
+        margin-top: 56px;
+        position: absolute;
+        width: 100%;
+        margin-right: 20px;
+        z-index: 999;
+    }
+    .navigation.navbar-dark .navbar-nav .nav-link {
+        padding: 10px 0;
+        color: #000;
+    }
+    .navigation.navbar-dark .navbar-toggler {
+        border-color: #fff;
+        float: right;
+    }
+}
+
+@media (max-width: 575px) {
+    .header {
+        padding: 40px 0px 0px 0px;
+    }
+    .logo {
+        text-align: center !important;
+        padding-bottom: 25px;
+        float: left;
+    }
+    .text-bg h1 {
+        font-size: 41px;
+        line-height: 55px;
+        padding-bottom: 18px;
+    }
+    .text-bg a {
+        float: inherit;
+        margin-bottom: 30px;
+    }
+    .text-bg span {
+        font-size: 26px;
+        line-height: 30px;
+    }
+    .titlepage h2 {
+        font-size: 28px;
+        line-height: 35px;
+    }
+    .about .titlepage {
+        padding-top: 30px;
+    }
+    .about a {
+        margin-bottom: 40px;
+    }
+    .cont h3 {
+        font-size: 30px;
+    }
+    .cont p {
+        padding: 0px 0px;
+        padding-bottom: 60px;
+    }
+    .cont span {
+        font-size: 20px;
+        line-height: 30px;
+    }
+    .main_form {
+        padding: 55px 15px;
+    }
+    .navigation.navbar {
+        float: right;
+        display: inherit !important;
+        padding: 0;
+        width: 100%;
+        margin-top: -70px;
+    }
+    .navigation .navbar-collapse {
+        background: #fff;
+        padding: 20px;
+        margin-top: 56px;
+        position: absolute;
+        width: 100%;
+        margin-right: 20px;
+        z-index: 999;
+    }
+    .navigation.navbar-dark .navbar-nav .nav-link {
+        padding: 10px 0;
+        color: #000;
+    }
+    .navigation.navbar-dark .navbar-toggler {
+        border-color: #fff;
+        float: right;
+    }
+    .testimonial_box {
+        padding: 0px 19px 40px 20px;
+    }
+}
