@@ -24,7 +24,3 @@ EOF
   }
 }
 
-variable "bucket_name" {
-  description = "The name of the bucket to create"
-  default = "<<bucket name here>>"
-}
