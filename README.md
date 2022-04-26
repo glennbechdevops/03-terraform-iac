@@ -43,7 +43,7 @@ Access token må ha "repo" tillatelser, og "workflow" tillatelser.
 Fra Terminal i Cloud 9. Klone repositoriet *ditt* med HTTPS URL. Eksempel ;
 
 ```
-git clone https://github.com/≤github bruker>/02-CD-AWS-lamda-sls
+git clone https://github.com/≤github bruker>/03-terraform-iac.git
 ```
 
 Får du denne feilmeldingen ```bash: /02-CD-AWS-lamda-sls: Permission denied``` - så glemte du å bytte ut <github bruker> med
