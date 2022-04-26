@@ -99,9 +99,8 @@ Vi skal nå få denne webapplikasjonen til å kjøre i et AWS miljø, og vi skal
 ### Før du starter
 
 * En Terraform backend  er en lagringsplass for Terraform metadata som beskriver hvordan infrakode og den faktiske infrastrukturen henger sammen.
-* Siden hver enkelt student har sin egen infrastruktur- og egen pipeline, må dere også ha deres egen, separate *state* fil. 
 * Følgende konfigurasjon forteller terraform at Backend er på Amazon AWS S3, i hvilken bucket, og hvilken statefil som skal brukes.
-
+* Siden hver enkelt student har sin egen infrastruktur- og egen pipeline, må dere også ha deres egen, separate *state* fil.
 * I provider.tf har vi en Backend for Terraform sin state basert på S3. Du må her erstatte ````<studentnavn>```` med ditt eget brukernavn
 
 ```hcl
